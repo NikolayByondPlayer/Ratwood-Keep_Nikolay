@@ -84,6 +84,7 @@
 		/datum/customizer/organ/penis/feline,
 		/datum/customizer/organ/breasts/animal,
 		/datum/customizer/organ/vagina/animal,
+		/datum/customizer/organ/neck_feature/anthro,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/none,
@@ -109,6 +110,8 @@
 		/datum/body_marking/front,
 		/datum/body_marking/tonage,
 		/datum/body_marking/spotted,
+		/datum/body_marking/harlequin,
+		/datum/body_marking/harlequinreversed,
 	)
 	languages = list(
 		/datum/language/common,

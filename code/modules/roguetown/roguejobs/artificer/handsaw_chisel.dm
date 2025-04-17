@@ -51,9 +51,13 @@
 	associated_skill = /datum/skill/combat/knives
 	max_blade_int = 50
 	dropshrink = 0.9
+	var/already_assembled
 
 /obj/item/rogueweapon/chisel/attackby(obj/item/W, mob/living/user, params)
 	. = ..()
+	if(already_assembled)
+		return
+
 	if(istype(W,/obj/item/natural/stoneblock))
 		playsound(get_turf(user.loc), 'sound/foley/brickdrop.ogg', 100)
 		user.visible_message("<span class='info'>[user] adds a striking tool to the chisel set.</span>")
@@ -99,12 +103,22 @@
 		qdel(src)
 		return
 
+	else if(istype(W, /obj/item/rogueweapon/hammer/blacksteel))
+		playsound(get_turf(user.loc), 'sound/foley/brickdrop.ogg', 100)
+		user.visible_message("<span class='info'>[user] adds a striking tool to the chisel set.</span>")
+		var/obj/item/rogueweapon/chisel/assembly/hammerblacksteel/F = new(src.loc)
+		qdel(W)
+		user.put_in_hands(F)
+		qdel(src)
+		return
+
 //................	Chisel toolset	............... //
 /obj/item/rogueweapon/chisel/assembly	// template
 	name = "chisel set"
 	desc = "Ready to shape stones when held in a steady grip. Can be separated easily."
 	possible_item_intents = list(/datum/intent/hit)
 	gripped_intents =  list(/datum/intent/chisel)
+	already_assembled = TRUE
 
 /obj/item/rogueweapon/chisel/assembly/mallet
 	icon_state = "chiselm"
@@ -134,6 +148,18 @@
 /obj/item/rogueweapon/chisel/assembly/hammerclaw/attack_right(mob/user)
 	var/obj/item/rogueweapon/chisel/F = new(user.loc)
 	var/obj/item/rogueweapon/hammer/steel/E = new(user.loc)
+	user.put_in_hands(E)
+	playsound(get_turf(user.loc), 'sound/foley/brickdrop.ogg', 100)
+	qdel(src)
+	user.put_in_hands(F)
+
+/obj/item/rogueweapon/chisel/assembly/hammerblacksteel
+	icon_state = "chiselbh"
+	item_state = "bs_masterhammer"
+
+/obj/item/rogueweapon/chisel/assembly/hammerblacksteel/attack_right(mob/user)
+	var/obj/item/rogueweapon/chisel/F = new(user.loc)
+	var/obj/item/rogueweapon/hammer/blacksteel/E = new(user.loc)
 	user.put_in_hands(E)
 	playsound(get_turf(user.loc), 'sound/foley/brickdrop.ogg', 100)
 	qdel(src)

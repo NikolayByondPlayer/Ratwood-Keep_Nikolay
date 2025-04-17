@@ -29,7 +29,7 @@
 	whisper(message)
 
 ///whisper a message
-/mob/proc/whisper(message, datum/language/language=null)
+/mob/proc/whisper(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
 	say(message, language) //only living mobs actually whisper, everything else just talks
 
 ///The me emote verb
@@ -48,6 +48,8 @@
 		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
 	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
+	if(check_subtler(message, FALSE))
+		return
 	usr.emote("me",1,message,TRUE, custom_me = TRUE)
 
 ///The me emote verb
@@ -66,6 +68,8 @@
 		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
 	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
+	if(check_subtler(message, FALSE))
+		return
 	usr.emote("me",1,message,TRUE, custom_me = TRUE)
 
 ///Speak as a dead person (ghost etc)

@@ -33,7 +33,7 @@
 	name = "Acolyte"
 	jobtype = /datum/job/roguetown/monk
 	allowed_patrons = list(/datum/patron/divine/pestra, /datum/patron/divine/astrata, /datum/patron/divine/malum, /datum/patron/divine/eora)
-	
+
 /datum/outfit/job/roguetown/monk/pre_equip(mob/living/carbon/human/H)
 	..()
 	belt = /obj/item/storage/belt/rogue/leather/rope
@@ -90,7 +90,7 @@
 	if(H.mind)
 		H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 5, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 4, TRUE)
-		H.mind.adjust_skillrank(/datum/skill/misc/treatment, 4, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/misc/treatment, 3, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/misc/reading, 3, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/misc/sewing, 2, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/magic/holy, 4, TRUE)
@@ -103,7 +103,7 @@
 		H.change_stat("endurance", 1)
 		H.change_stat("perception", -1)
 		if (H.patron.type == /datum/patron/divine/malum)
-			H.AddSpell(new /obj/effect/proc_holder/spell/invoked/malum_flame_rogue) // weaker astra fire spell. mostly for lighting things.
+			H.AddSpell(new SPELL_MALUM_FLAME_ROGUE) // weaker astra fire spell. mostly for lighting things.
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_spells(H)

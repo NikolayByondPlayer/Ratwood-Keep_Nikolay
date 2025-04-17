@@ -18,6 +18,7 @@
 	/// Our charge gauge
 	var/charge = SEX_MAX_CHARGE
 	/// Whether we want to screw until finished, or non stop
+	var/arousal_frozen = FALSE
 	var/do_until_finished = TRUE
 	var/last_arousal_increase_time = 0
 	var/last_ejaculation_time = 0
@@ -226,8 +227,6 @@
 	if(HAS_TRAIT(user, TRAIT_BAOTHA_CURSE))
 		user.apply_status_effect(/datum/status_effect/debuff/cumbrained)
 	SSticker.cums++
-	cuckold_check()
-
 
 /datum/sex_controller/proc/after_milking()
 	set_arousal(80)
@@ -312,6 +311,14 @@
 		action_target.emote(pick(list("gag", "choke", "gasp")), forced = TRUE)
 
 /datum/sex_controller/proc/perform_sex_action(mob/living/carbon/human/action_target, arousal_amt, pain_amt, giving)
+	if(HAS_TRAIT(user, TRAIT_GOODLOVER))
+		arousal_amt *=1.5
+		if(prob(10))
+			var/lovermessage = pick("This feels so good!","I am in heaven!","This is too good to be possible!","By the ten!","I can't stop, too good!")
+			to_chat(action_target, span_love(lovermessage))
+	if(HAS_TRAIT(user, TRAIT_DEATHBYSNUSNU))
+		if(istype(user.rmb_intent, /datum/rmb_intent/strong))
+			pain_amt *= 2
 	action_target.sexcon.receive_sex_action(arousal_amt, pain_amt, giving, force, speed)
 
 /datum/sex_controller/proc/receive_sex_action(arousal_amt, pain_amt, giving, applied_force, applied_speed)
@@ -323,7 +330,8 @@
 		arousal_amt = 0
 		pain_amt = 0
 
-	adjust_arousal(arousal_amt)
+	if(!arousal_frozen) 
+		adjust_arousal(arousal_amt)
 
 	damage_from_pain(pain_amt)
 	try_do_moan(arousal_amt, pain_amt, applied_force, giving)
@@ -489,6 +497,7 @@
 	else
 		dat += "<center><a href='?src=[REF(src)];task=speed_down'>\<</a> [speed_name] <a href='?src=[REF(src)];task=speed_up'>\></a> ~|~ <a href='?src=[REF(src)];task=force_down'>\<</a> [force_name] <a href='?src=[REF(src)];task=force_up'>\></a> ~|~ <a href='?src=[REF(src)];task=manual_arousal_down'>\<</a> [manual_arousal_name] <a href='?src=[REF(src)];task=manual_arousal_up'>\></a></center>"
 	dat += "<center>| <a href='?src=[REF(src)];task=toggle_finished'>[do_until_finished ? "UNTIL IM FINISHED" : "UNTIL I STOP"]</a> |</center>"
+	dat += "<center><a href='?src=[REF(src)];task=set_arousal'>SET AROUSAL</a> | <a href='?src=[REF(src)];task=freeze_arousal'>[arousal_frozen ? "UNFREEZE AROUSAL" : "FREEZE AROUSAL"]</a></center>"
 	if(target == user)
 		dat += "<center>Doing unto yourself</center>"
 	else
@@ -548,6 +557,11 @@
 			adjust_arousal_manual(-1)
 		if("toggle_finished")
 			do_until_finished = !do_until_finished
+		if("set_arousal")
+			var/amount = input(user, "Value above 120 will immediately cause orgasm!", "Set Arousal", arousal) as num
+			set_arousal(amount)
+		if("freeze_arousal")
+			arousal_frozen = !arousal_frozen
 	show_ui()
 
 /datum/sex_controller/proc/try_stop_current_action()
@@ -771,21 +785,9 @@
 		if(SEX_FORCE_EXTREME)
 			return "<span class='love_extreme'>[string]</span>"
 
-/datum/sex_controller/proc/cuckold_check()
-	//First, check if the target has a family.
-	var/datum/family/F = target.getFamily(TRUE)
-	if(!F)
-		return
-
-
-	//Second, check if target has a spouse relation.
-	var/list/rels = F.getRelations(target,REL_TYPE_SPOUSE)
-
-	if(!length(rels))
-		return
-
-	for(var/datum/relation/R in rels) //Loop through all the spouses (Should only be one.)
-		var/mob/living/carbon/human/cuckold = R.target:resolve()
-		if(!cuckold || cuckold == user)
-			continue
-		GLOB.cuckolds |= "[cuckold.job] [cuckold.real_name] (by [user.real_name])"
+/datum/sex_controller/proc/try_pelvis_crush(mob/living/carbon/human/target)
+	if(istype(user.rmb_intent, /datum/rmb_intent/strong))
+		if(!target.has_wound(/datum/wound/fracture/groin))
+			if(prob(10))
+				var/obj/item/bodypart/groin = target.get_bodypart(check_zone(BODY_ZONE_PRECISE_GROIN))
+				groin.add_wound(/datum/wound/fracture)

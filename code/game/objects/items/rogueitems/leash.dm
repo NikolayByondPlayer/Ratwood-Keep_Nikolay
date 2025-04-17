@@ -58,7 +58,7 @@
 	equip_sound = 'sound/foley/equip/rummaging-01.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	throw_range = 4
-	slot_flags = ITEM_SLOT_BELT|ITEM_SLOT_HIP
+	slot_flags = ITEM_SLOT_HIP
 	force = 1
 	throwforce = 1
 	w_class = WEIGHT_CLASS_SMALL
@@ -329,7 +329,7 @@
 		UnregisterSignal(leash_master, COMSIG_MOVABLE_MOVED)
 		leash_master = null
 
-/obj/item/leash/equipped(mob/user)
+/obj/item/leash/equipped(mob/user, slot, initial = FALSE, silent = FALSE)
 	. = ..()
 	if(!leash_pet) //Don't apply statuses with a petless leash.
 		return

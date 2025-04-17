@@ -100,12 +100,6 @@
 /datum/intent/shoot/firarm
 	chargedrain = 0
 
-/datum/intent/shoot/firearm/can_charge()
-	if(mastermob && masteritem.wielded)
-		if(!masteritem.wielded)
-			return FALSE
-		return TRUE
-
 /datum/intent/shoot/firearm/get_chargetime()
 	if(mastermob && chargetime)
 		var/newtime = chargetime
@@ -314,10 +308,14 @@
 	icon_state = "pistol"
 	item_state = "pistol"
 	force = 10
+	possible_item_intents = list(/datum/intent/shoot/firearm, /datum/intent/arc/firearm, /datum/intent/mace/strike/wood)
+	gripped_intents = null
 	wlength = WLENGTH_SHORT
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_HIP
 	walking_stick = FALSE
+	bigboy = FALSE
+	gripsprite = FALSE
 	cartridge_wording = "lead ball"
 
 /obj/item/gun/ballistic/firearm/arquebus_pistol/getonmobprop(tag)
@@ -438,6 +436,8 @@
 	lefthand_file = 'icons/mob/inhands/weapons/guns_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/guns_righthand.dmi'
 	item_state = "blunderbuss"
+	bigboy = FALSE
+	gripsprite = FALSE
 	mag_type = /obj/item/ammo_box/magazine/internal/firearm/blunderbuss
 	cartridge_wording = "grapeshot"
 

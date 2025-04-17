@@ -15,6 +15,11 @@
 	cost = 8
 	contains = list(/obj/item/clothing/mask/cigarette/rollie/cannabis)
 
+/datum/supply_pack/rogue/luxury/sshigs
+	name = "Sshig Brand Zigs"
+	cost = 25
+	contains = list(/obj/item/storage/fancy/shhig)
+
 /datum/supply_pack/rogue/luxury/perfume
 	name = "Perfume"
 	cost = 10 //steward can get these in bulk for 12 per
@@ -80,6 +85,31 @@
 	cost = 10
 	contains = list(/obj/item/rogue/instrument/drum)
 
+/datum/supply_pack/rogue/luxury/deck
+	name = "Deck of cards"
+	cost = 15
+	contains = list(/obj/item/toy/cards/deck)
+
+/datum/supply_pack/rogue/luxury/dice
+	name = "Full bag of dice"
+	cost = 15
+	contains = list(/obj/item/storage/pill_bottle/dice)
+
+/datum/supply_pack/rogue/luxury/push_your_luck
+	name = "Bag of 6 dice, ideal for the Push Your Luck game"
+	cost = 15
+	contains = list(/obj/item/storage/pill_bottle/dice/push_your_luck)
+
+/datum/supply_pack/rogue/luxury/psiring
+	name = "Blessed Ring"
+	cost = 40
+	contains = list(/obj/item/clothing/ringP)
+
+/datum/supply_pack/rogue/luxury/talkstone
+	name = "Talkstone"
+	cost = 150
+	contains = list(/obj/item/clothing/neck/roguetown/talkstone)
+
 /datum/supply_pack/rogue/luxury/nomag
 	name = "Ring of Null Magic"
 	cost = 300
@@ -104,3 +134,31 @@
 	name = "Love Potion"
 	cost = 300
 	contains = list(/obj/item/lovepotion)
+
+/datum/supply_pack/rogue/luxury/obsidianfragment
+	name = "Obsidian Fragments"
+	cost = 55
+	contains = list(	
+			/obj/item/natural/obsidian,
+			/obj/item/natural/obsidian,
+			/obj/item/natural/obsidian,
+			)
+
+/datum/supply_pack/rogue/luxury/manaflower
+	name = "Manabloom Flowers"
+	cost = 55
+	contains = list(	
+			/obj/item/reagent_containers/food/snacks/grown/rogue/manabloom,
+			/obj/item/reagent_containers/food/snacks/grown/rogue/manabloom,
+			/obj/item/reagent_containers/food/snacks/grown/rogue/manabloom,
+			)
+
+/datum/supply_pack/rogue/luxury/manacrystal
+	name = "Mana Crystals"
+	cost = 55
+	contains = list(	
+			/obj/item/natural/manacrystal,
+			/obj/item/natural/manacrystal,
+			/obj/item/natural/manacrystal,
+			)
+

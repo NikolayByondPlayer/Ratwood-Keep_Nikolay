@@ -238,6 +238,14 @@
 			return
 		if(!W)
 			return
+
+		// Simple way to check if the item is no longer in the players hand
+		// Even if it somehow isn't deleted yet, this will stop the infinite fuel bug.
+		if(user.get_active_held_item() != W)
+			to_chat(user, span_warning("That item is no longer in my hand..."))
+			return
+
+		user.dropItemToGround(W)
 		qdel(W)
 		user.visible_message(span_warning("[user] feeds [W] to [src]."))
 		if(initial(fueluse))
@@ -298,7 +306,7 @@
 			H.visible_message(span_info("[H] warms \his hand over the fire."))
 
 			if(do_after(H, 15, target = src))
-				var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
+				var/obj/item/bodypart/affecting = H.get_bodypart((user.active_hand_index % 2 == 0) ? BODY_ZONE_R_ARM : BODY_ZONE_L_ARM)
 				to_chat(H, span_warning("HOT!"))
 				if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
 					H.update_damage_overlays()
@@ -617,11 +625,10 @@
 					update_icon()
 					playsound(src.loc, 'sound/misc/frying.ogg', 80, FALSE, extrarange = 5)
 					return
-		// New concept = boil at least 66 water, add item, it turns into food reagent volume 66 of the appropriate type
 		else if(istype(attachment, /obj/item/reagent_containers/glass/bucket/pot))
 			var/obj/item/reagent_containers/glass/bucket/pot = attachment
 			if(istype(W, /obj/item/reagent_containers/food/snacks/grown/oat))
-				if(!pot.reagents.has_reagent(/datum/reagent/water, 66))
+				if(!pot.reagents.has_reagent(/datum/reagent/water, 51))
 					to_chat(user, "<span class='notice'>Not enough water.</span>")
 					return TRUE
 				if(pot.reagents.chem_temp < 374)
@@ -631,15 +638,15 @@
 					user.visible_message("<span class='info'>[user] places [W] into the pot.</span>")
 					qdel(W)
 					playsound(src.loc, 'sound/items/Fish_out.ogg', 20, TRUE)
-					pot.reagents.remove_reagent(/datum/reagent/water, 65)
+					pot.reagents.remove_reagent(/datum/reagent/water, 51)
 					sleep(300)
 					playsound(src, "bubbles", 30, TRUE)
-					pot.reagents.add_reagent(/datum/reagent/consumable/soup/oatmeal, 65)
+					pot.reagents.add_reagent(/datum/reagent/consumable/soup/oatmeal, 50)
 					pot.reagents.remove_reagent(/datum/reagent/water, 1)
 				return
 
 			if(W.type in subtypesof(/obj/item/reagent_containers/food/snacks/rogue/veg))
-				if(!pot.reagents.has_reagent(/datum/reagent/water, 65))
+				if(!pot.reagents.has_reagent(/datum/reagent/water, 24))
 					to_chat(user, "<span class='notice'>Not enough water.</span>")
 					return TRUE
 				if(pot.reagents.chem_temp < 374)
@@ -648,35 +655,35 @@
 				if(do_after(user,2 SECONDS, target = src))
 					user.visible_message("<span class='info'>[user] places [W] into the pot.</span>")
 					playsound(src.loc, 'sound/items/Fish_out.ogg', 20, TRUE)
-					pot.reagents.remove_reagent(/datum/reagent/water, 32)
+					pot.reagents.remove_reagent(/datum/reagent/water, 15)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/rogue/veg/potato_sliced))
 						qdel(W)
 						sleep(800)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/potato, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/potato, 16)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/rogue/veg/onion_sliced))
 						qdel(W)
 						sleep(600)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/onion, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/onion, 16)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/grown/beet))
 						qdel(W)
 						sleep(600)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/beet, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/beet, 16)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/rogue/veg/cabbage_sliced))
 						qdel(W)
 						sleep(700)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/cabbage, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/veggie/cabbage, 16)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 				return
 
 			if(W.type in subtypesof(/obj/item/reagent_containers/food/snacks/rogue/meat))
-				if(!pot.reagents.has_reagent(/datum/reagent/water, 66))
+				if(!pot.reagents.has_reagent(/datum/reagent/water, 19))
 					to_chat(user, "<span class='notice'>Not enough water.</span>")
 					return TRUE
 				if(pot.reagents.chem_temp < 374)
@@ -685,30 +692,30 @@
 				if(do_after(user,2 SECONDS, target = src))
 					user.visible_message("<span class='info'>[user] places [W] into the pot.</span>")
 					playsound(src.loc, 'sound/items/Fish_out.ogg', 20, TRUE)
-					pot.reagents.remove_reagent(/datum/reagent/water, 65)
+					pot.reagents.remove_reagent(/datum/reagent/water, 18)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/rogue/meat/mince/fish))
 						qdel(W)
 						sleep(800)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/fish, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/fish, 18)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/rogue/meat/spider))
 						qdel(W)
 						sleep(1000)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/yucky, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/yucky, 18)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 					if(istype(W, /obj/item/reagent_containers/food/snacks/rogue/meat/poultry/cutlet) || istype(W, /obj/item/reagent_containers/food/snacks/rogue/meat/mince/poultry))
 						qdel(W)
 						sleep(900)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/chicken, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/chicken, 18)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 					else
 						qdel(W)
 						sleep(900)
 						playsound(src, "bubbles", 30, TRUE)
-						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/meat, 65)
+						pot.reagents.add_reagent(/datum/reagent/consumable/soup/stew/meat, 18)
 						pot.reagents.remove_reagent(/datum/reagent/water, 1)
 				return
 	. = ..()
@@ -786,7 +793,7 @@
 			if(istype(H))
 				H.visible_message(span_info("[H] warms \his hand over the embers."))
 				if(do_after(H, 50, target = src))
-					var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
+					var/obj/item/bodypart/affecting = H.get_bodypart((user.active_hand_index % 2 == 0) ? BODY_ZONE_R_ARM : BODY_ZONE_L_ARM)
 					to_chat(H, span_warning("HOT!"))
 					if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
 						H.update_damage_overlays()
@@ -867,7 +874,7 @@
 			H.visible_message(span_info("[H] warms \his hand near the fire."))
 
 			if(do_after(H, 100, target = src))
-				var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
+				var/obj/item/bodypart/affecting = H.get_bodypart((user.active_hand_index % 2 == 0) ? BODY_ZONE_R_ARM : BODY_ZONE_L_ARM)
 				to_chat(H, span_warning("HOT!"))
 				if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
 					H.update_damage_overlays()
